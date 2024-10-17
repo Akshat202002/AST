@@ -96,18 +96,25 @@ class Rule {
     static async save(ruleString, metadata) {
         const rule = new RuleModel({ ruleString, metadata });
         await rule.save();
+        const ast = Rule.createRule(ruleString);
+        return { ...rule.toObject(), ast };
     }
 
     static async getAll() {
-        return await RuleModel.find();
+        const rules = await RuleModel.find();
+        return rules.map(rule => ({ ...rule.toObject(), ast: Rule.createRule(rule.ruleString) }));
     }
 
     static async getById(id) {
-        return await RuleModel.findById(id);
+        const rule = await RuleModel.findById(id);
+        return { ...rule.toObject(), ast: Rule.createRule(rule.ruleString) };
     }
 
     static async update(id, ruleString, metadata) {
         await RuleModel.findByIdAndUpdate(id, { ruleString, metadata });
+        const rule = await RuleModel.findById(id);
+        const ast = Rule.createRule(ruleString);
+        return { ...rule.toObject(), ast };
     }
 
     static async delete(id) {

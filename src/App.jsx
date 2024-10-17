@@ -1,10 +1,19 @@
+import { useState } from 'react';
 import RuleForm from './components/RuleForm';
+import RuleList from './components/RuleList';
 
 function App() {
+  const [editingRule, setEditingRule] = useState(null);
+
+  const handleSave = (savedRule) => {
+    setEditingRule(null);
+  };
+
   return (
     <div>
       <h1>Rule Engine</h1>
-      <RuleForm />
+      <RuleForm rule={editingRule} onSave={handleSave} />
+      <RuleList onEdit={setEditingRule} />
     </div>
   );
 }

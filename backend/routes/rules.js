@@ -5,8 +5,7 @@ const router = express.Router();
 
 router.post('/create_rule', async (req, res) => {
     const { ruleString, metadata } = req.body;
-    const rule = Rule.createRule(ruleString);
-    await Rule.save(ruleString, metadata);
+    const rule = await Rule.save(ruleString, metadata);
     res.json(rule);
 });
 
@@ -34,8 +33,8 @@ router.get('/rules/:id', async (req, res) => {
 
 router.put('/rules/:id', async (req, res) => {
     const { ruleString, metadata } = req.body;
-    await Rule.update(req.params.id, ruleString, metadata);
-    res.json({ message: 'Rule updated' });
+    const rule = await Rule.update(req.params.id, ruleString, metadata);
+    res.json(rule);
 });
 
 router.delete('/rules/:id', async (req, res) => {
