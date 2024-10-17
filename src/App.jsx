@@ -10,7 +10,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="container mt-4">
       <h1>Rule Engine</h1>
       <RuleForm rule={editingRule} onSave={handleSave} />
       <RuleList onEdit={setEditingRule} />
