@@ -142,10 +142,10 @@ class Rule {
      * @returns {Promise<Object>} The saved rule with its AST.
      */
     static async save(ruleString, metadata) {
-        const ast = Rule.createRule(ruleString);
         const rule = new RuleModel({ ruleString, metadata });
         await rule.save();
-        return rule;
+        const ast = Rule.createRule(ruleString);
+        return { ...rule.toObject(), ast };
     }
 
     /**
@@ -153,7 +153,8 @@ class Rule {
      * @returns {Promise<Object[]>} An array of all rules with their ASTs.
      */
     static async getAll() {
-        return RuleModel.find({});
+        const rules = await RuleModel.find();
+        return rules.map(rule => ({ ...rule.toObject(), ast: Rule.createRule(rule.ruleString) }));
     }
 
     /**
@@ -176,7 +177,7 @@ class Rule {
     static async update(id, ruleString, metadata) {
         await RuleModel.findByIdAndUpdate(id, { ruleString, metadata });
         const rule = await RuleModel.findById(id);
-        const ast = Rule.createRule(rule.ruleString);
+        const ast = Rule.createRule(ruleString);
         return { ...rule.toObject(), ast };
     }
 

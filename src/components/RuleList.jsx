@@ -34,7 +34,7 @@ function RuleList({ onEdit }) {
     };
 
     const handleViewAst = (rule) => {
-        setViewingAst(rule.ruleString);
+        setViewingAst(rule.ast);
         setSelectedRule(rule);
     };
 
