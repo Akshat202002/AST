@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import RuleEvaluator from './RuleEvaluator';
 
 function RuleList({ onEdit }) {
     const [rules, setRules] = useState([]);
     const [viewingAst, setViewingAst] = useState(null);
-    const [modifications, setModifications] = useState({});
+    const [selectedRule, setSelectedRule] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -33,7 +34,8 @@ function RuleList({ onEdit }) {
     };
 
     const handleViewAst = (rule) => {
-        setViewingAst(rule.ast);
+        setViewingAst(rule.ruleString);
+        setSelectedRule(rule);
     };
 
     return (
@@ -46,7 +48,7 @@ function RuleList({ onEdit }) {
                         <pre>{rule.ruleString}</pre>
                         <button className="btn btn-secondary me-2" onClick={() => onEdit(rule)}>Edit</button>
                         <button className="btn btn-danger me-2" onClick={() => handleDelete(rule._id)}>Delete</button>
-                        <button className="btn btn-warning me-2" onClick={() => handleViewAst(rule)}>View AST</button>
+                        <button className="btn btn-warning me-2" onClick={() => handleViewAst(rule)}>View & Evaluate</button>
                     </li>
                 ))}
             </ul>
@@ -54,6 +56,7 @@ function RuleList({ onEdit }) {
                 <div className="mt-4">
                     <h3>AST Representation</h3>
                     <pre>{JSON.stringify(viewingAst, null, 2)}</pre>
+                    {selectedRule && <RuleEvaluator ast={selectedRule.ast} />}
                 </div>
             )}
         </div>
