@@ -140,11 +140,19 @@ class Rule {
      * @param {string} ruleString - The rule string to save.
      * @param {Object} metadata - The metadata associated with the rule.
      * @returns {Promise<Object>} The saved rule with its AST.
+     * @throws {Error} If the rule string or metadata is invalid.
      */
     static async save(ruleString, metadata) {
+        // Validate the rule string
+        const ast = Rule.createRule(ruleString);
+
+        // Validate the metadata (example: ensure description is present)
+        if (!metadata.description || typeof metadata.description !== 'string') {
+            throw new Error('Invalid metadata: description is required and must be a string.');
+        }
+
         const rule = new RuleModel({ ruleString, metadata });
         await rule.save();
-        const ast = Rule.createRule(ruleString);
         return { ...rule.toObject(), ast };
     }
 
@@ -173,11 +181,19 @@ class Rule {
      * @param {string} ruleString - The new rule string.
      * @param {Object} metadata - The new metadata.
      * @returns {Promise<Object>} The updated rule with its AST.
+     * @throws {Error} If the rule string or metadata is invalid.
      */
     static async update(id, ruleString, metadata) {
+        // Validate the rule string
+        const ast = Rule.createRule(ruleString);
+
+        // Validate the metadata (example: ensure description is present)
+        if (!metadata.description || typeof metadata.description !== 'string') {
+            throw new Error('Invalid metadata: description is required and must be a string.');
+        }
+
         await RuleModel.findByIdAndUpdate(id, { ruleString, metadata });
         const rule = await RuleModel.findById(id);
-        const ast = Rule.createRule(ruleString);
         return { ...rule.toObject(), ast };
     }
 
